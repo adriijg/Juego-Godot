@@ -1,0 +1,99 @@
+extends CharacterBody2D
+
+@export var gravity_scale = 2
+@export var speed = 400
+@export var acceleration = 1700
+@export var jump_force = -1000
+@export var air_acceleration = 2000
+@export var air_friction = 700
+@export var friction = 3000
+
+@onready var ani_player = $ani_player
+# Referencia al contador
+@onready var contador: Control = $CanvasLayer/Contador
+
+# Contador de monedas
+var monedas: int = 0
+
+# Solucionar bug de muerte infinita
+var vivo: bool = true
+
+# Monedas necesarias para ganar
+var win_monedas: int = 4
+
+func update_animation(input_axis):
+	if input_axis != 0:
+		# velocidad de la animación será dependiente de la velocidad
+		ani_player.speed_scale = velocity.length() / 100
+		ani_player.flip_h = (input_axis < 0)
+		ani_player.play("run")
+	elif not is_on_floor():
+		ani_player.play("jump")
+	else:
+		ani_player.speed_scale = 1
+		ani_player.play("idle")
+		
+func _physics_process(delta: float) -> void:
+	var input_axis = Input.get_axis("mover_izquierda", "mover_derecha")
+	apply_gravity(delta)
+	handle_acceleration(input_axis, delta)
+	apply_friction(input_axis, delta)
+	handle_jump()
+	handle_air_acceleration(input_axis, delta)
+	update_animation(input_axis)
+	move_and_slide()
+	
+func apply_friction(input_axis, delta):
+	if input_axis == 0 and is_on_floor():
+		velocity.x = move_toward(velocity.x, 0, friction * delta)
+
+func apply_gravity(delta):
+	if not is_on_floor():
+		velocity += get_gravity() * delta * gravity_scale
+
+func handle_acceleration(input_axis, delta):
+	if not is_on_floor(): return
+	if input_axis != 0:
+		velocity.x = move_toward(velocity.x, speed * input_axis, acceleration * delta)
+
+func handle_jump():
+	if is_on_floor():
+		if Input.is_action_pressed("saltar"):
+			velocity.y = jump_force
+		
+func handle_air_acceleration(input_axis, delta):
+	if is_on_floor(): return
+	if input_axis != 0:
+		velocity.x = move_toward(velocity.x, speed * input_axis, air_acceleration * delta)
+
+# Agregamos al player al grupo de jugadores
+func _ready() -> void:
+	add_to_group("jugadores")
+	contador.actualizar(0)
+	
+
+# Agrega una moneda al contador del jugador
+func add_moneda():
+	monedas += 1
+	contador.actualizar(monedas)
+	fin_juego()
+
+func morir():
+
+	if not vivo:
+		return
+		# desactivo las físicas
+
+	vivo = false
+
+	set_physics_process(false)
+	$ani_player.play("muerte")
+	$audio_player.play()
+	$tiempo.start()
+	await $tiempo.timeout
+	get_tree().change_scene_to_file("res://menu/menu.tscn")
+
+func fin_juego():
+	if monedas >= win_monedas:
+		await get_tree().create_timer(1.0).timeout
+		get_tree().change_scene_to_file("res://menu/menu.tscn")

@@ -1,0 +1,54 @@
+[gd_scene format=3 uid="uid://cs6sy2upf0ae1"]
+
+[ext_resource type="Texture2D" uid="uid://c7ak0275ev18s" path="res://fondo/img/layer8.PNG" id="1_og34b"]
+[ext_resource type="Texture2D" uid="uid://bajmwtcs6jjhh" path="res://fondo/img/layer6.PNG" id="2_048j0"]
+[ext_resource type="Texture2D" uid="uid://bdo0s3ia4s8s0" path="res://fondo/img/layer0.PNG" id="3_s7ydw"]
+
+[node name="fondo" type="ParallaxBackground" unique_id=2145868593]
+
+[node name="layer_fondo" type="ParallaxLayer" parent="." unique_id=544076691]
+position = Vector2(0, -996)
+scale = Vector2(3, 3)
+motion_scale = Vector2(0.3, 1)
+motion_mirroring = Vector2(1152, 0)
+metadata/_edit_group_ = true
+
+[node name="sprt_fondo" type="Sprite2D" parent="layer_fondo" unique_id=506168279]
+position = Vector2(0, 3.0517578e-05)
+scale = Vector2(1.8, 1.8)
+texture = ExtResource("1_og34b")
+centered = false
+
+[node name="layer_medio" type="ParallaxLayer" parent="." unique_id=1759673793]
+position = Vector2(0, -848)
+scale = Vector2(3, 3)
+motion_scale = Vector2(0.2, 1)
+motion_mirroring = Vector2(1152, 0)
+metadata/_edit_group_ = true
+
+[node name="sprt_medio" type="Sprite2D" parent="layer_medio" unique_id=152333878]
+position = Vector2(1, 290)
+texture = ExtResource("2_048j0")
+centered = false
+
+[node name="sprt_medio2" type="Sprite2D" parent="layer_medio/sprt_medio" unique_id=801931791]
+position = Vector2(639, 0)
+texture = ExtResource("2_048j0")
+centered = false
+
+[node name="layer_primerplano" type="ParallaxLayer" parent="." unique_id=2056769465]
+position = Vector2(0, -848)
+scale = Vector2(3, 3)
+motion_scale = Vector2(0.1, 1)
+motion_mirroring = Vector2(1152, 0)
+metadata/_edit_group_ = true
+
+[node name="sprt_primerplano" type="Sprite2D" parent="layer_primerplano" unique_id=1627041322]
+position = Vector2(0, 140)
+texture = ExtResource("3_s7ydw")
+centered = false
+
+[node name="sprt_primerplano2" type="Sprite2D" parent="layer_primerplano/sprt_primerplano" unique_id=1432748973]
+position = Vector2(640, 0)
+texture = ExtResource("3_s7ydw")
+centered = false
